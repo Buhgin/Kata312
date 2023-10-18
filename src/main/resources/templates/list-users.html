@@ -21,6 +21,7 @@
         <th>Name</th>
         <th>LastName</th>
         <th>Email</th>
+        <th>Role</th>
         <th>Actions</th>
     </tr>
     </thead>
@@ -28,26 +29,30 @@
     <tr th:each="user : ${users}">
 
         <td th:text="${user.id}"></td>
-
-
         <td th:text="${user.firstName}"></td>
         <td th:text="${user.lastName}"></td>
         <td th:text="${user.email}"></td>
-
+        <td><pre th:text="${user.toString()}"></pre></td>
 
         <td>
-            <form th:action="@{/users/update}" method="post">
+            <form th:action="@{/admin/update}" method="post">
                 <input type="hidden" name="id" th:value="${user.id}" />
                 <input type="text" name="firstName" th:value="${user.firstName}" placeholder="First Name" />
                 <input type="text" name="lastName" th:value="${user.lastName}" placeholder="Last Name" />
                 <input type="text" name="email" th:value="${user.email}" placeholder="Email" />
+                <input type="text" name="password"  placeholder="Password" />
+                <input> <select name="roles" multiple="multiple">
+                <option th:each="role : ${rolesList}"
+                        th:value="${role.id}"
+                        th:text="${role.role}">Options</option>
+                </select>
                 <input type="submit" value="Update" />
             </form>
         </td>
 
 
         <td>
-            <form th:action="@{/users/remove}" method="post">
+            <form th:action="@{/admin/remove}" method="post">
                 <input type="hidden" name="id" th:value="${user.id}" />
                 <input type="submit" value="Delete" />
             </form>
@@ -55,15 +60,20 @@
     </tr>
     </tbody>
 </table>
-
 <h3>Add a New User</h3>
-<form th:action="@{/users/add}" th:object="${user}" method="post">
-    Name: <input type="text" th:field="*{firstName}"/><br/>
-    LastName: <input type="text" th:field="*{lastName}"/><br/>
-    Email: <input type="text" th:field="*{email}"/><br/>
+<form action="#" th:action="@{/admin/add}" method="post">
+    Name: <input type="text" name="firstName"/><br/>
+    LastName: <input type="text" name="lastName"/><br/>
+    Email: <input type="text" name="email"/><br/>
+    Password: <input type="password" name="password"/><br/>
+    ROLE:<select name="roles" multiple="multiple">
+    <option th:each="role : ${rolesList}"
+            th:value="${role.id}"
+            th:text="${role.role}">Options</option>
+</select>
     <input type="submit" value="Add User"/>
 </form>
-
+<a href="/logout">Logout</a>
 </body>
 
 </html>

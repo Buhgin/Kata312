@@ -1,10 +1,11 @@
 package com.boris.kata312.dao;
 
 import com.boris.kata312.model.User;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Repository
@@ -44,6 +45,13 @@ public class UserDaoImp implements UserDao {
     @Override
     public User getById(Long id) {
         return entityManager.find(User.class, id);
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        return entityManager.createQuery("SELECT u FROM User u WHERE u.email = :email", User.class)
+                .setParameter("email", email)
+                .getSingleResult();
     }
 
 

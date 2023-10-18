@@ -1,29 +1,44 @@
 package com.boris.kata312.service;
 
 
+import com.boris.kata312.dao.RoleDao;
 import com.boris.kata312.dao.UserDao;
+import com.boris.kata312.model.Role;
 import com.boris.kata312.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.boris.kata312.model.UserRole;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImp implements UserService {
 
-    @Autowired
-    private UserDao userDao;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public UserServiceImp(UserDao userDao) {
-        this.userDao = userDao;
-    }
+    private final UserDao userDao;
+    private final RoleDao roleDao;
 
 
     @Transactional
     @Override
-    public void add(User user) {
-        userDao.add(user);
+    public void add(String firstName, String lastName, String email, String password, List<Long> role) {
+       User newUser = new User();
+         newUser.setFirstName(firstName);
+        newUser.setLastName(lastName);
+        newUser.setEmail(email);
+        newUser.setPassword(bCryptPasswordEncoder.encode(password));
+        Set<Role> roles = new HashSet<>();
+        role.forEach(r -> roles.add(roleDao.getById(r)));
+        newUser.setRoles(roles);
+        userDao.add(newUser);
     }
 
     @Transactional(readOnly = true)
@@ -41,13 +56,16 @@ public class UserServiceImp implements UserService {
 
     @Transactional
     @Override
-    public void update(User user) {
-        User user1 = userDao.getById(user.getId());
-        user1.setEmail(user.getEmail());
-        user1.setLastName(user.getLastName());
-        user1.setFirstName(user.getFirstName());
-        userDao.update(user);
-
+    public void update(Long id, String firstName, String lastName, String email, String password, List<Long> role) {
+        User user1 = userDao.getById(id);
+        user1.setEmail(email);
+        user1.setLastName(lastName);
+        user1.setFirstName(firstName);
+        user1.setPassword(bCryptPasswordEncoder.encode(password));
+        Set<Role> roles = new HashSet<>();
+        role.forEach(r -> roles.add(roleDao.getById(r)));
+        user1.setRoles(roles);
+        userDao.update(user1);
     }
 
     @Override
@@ -56,4 +74,12 @@ public class UserServiceImp implements UserService {
     }
 
 
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userDao.findByEmail(email);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+        return user;
+    }
 }

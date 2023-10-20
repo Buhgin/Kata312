@@ -9,7 +9,7 @@ import java.util.List;
 public interface RoleDao {
     Role getById(Long id);
 
-    Role findByRoleName(UserRole role);
+    Role findByRoleName(String role);
     List<Role> listRole();
 
 }

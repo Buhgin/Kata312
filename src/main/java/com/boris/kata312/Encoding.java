@@ -8,6 +8,6 @@ public class Encoding {
     private static BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
     public static void main(String[] args) {
 
-        System.out.println(bCryptPasswordEncoder.encode("admin"));
+        System.out.println(bCryptPasswordEncoder.encode("a"));
     }
 }

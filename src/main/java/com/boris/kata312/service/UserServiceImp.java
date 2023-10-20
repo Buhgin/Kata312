@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,15 +30,16 @@ public class UserServiceImp implements UserService {
 
     @Transactional
     @Override
-    public void add(String firstName, String lastName, String email, String password, List<Long> role) {
+    public void add(User user,List<Long> roleIds) {
        User newUser = new User();
-         newUser.setFirstName(firstName);
-        newUser.setLastName(lastName);
-        newUser.setEmail(email);
-        newUser.setPassword(bCryptPasswordEncoder.encode(password));
-        Set<Role> roles = new HashSet<>();
-        role.forEach(r -> roles.add(roleDao.getById(r)));
-        newUser.setRoles(roles);
+         newUser.setFirstName(user.getFirstName());
+        newUser.setLastName(user.getLastName());
+        newUser.setEmail(user.getEmail());
+        newUser.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        Set<Role> roleSet = roleIds.stream()
+                .map(roleDao::getById)
+                .collect(Collectors.toSet());
+        newUser.setRoles(roleSet);
         userDao.add(newUser);
     }
 
@@ -56,15 +58,16 @@ public class UserServiceImp implements UserService {
 
     @Transactional
     @Override
-    public void update(Long id, String firstName, String lastName, String email, String password, List<Long> role) {
-        User user1 = userDao.getById(id);
-        user1.setEmail(email);
-        user1.setLastName(lastName);
-        user1.setFirstName(firstName);
-        user1.setPassword(bCryptPasswordEncoder.encode(password));
-        Set<Role> roles = new HashSet<>();
-        role.forEach(r -> roles.add(roleDao.getById(r)));
-        user1.setRoles(roles);
+    public void update(long id, User user, List<Long> roleIds) {
+        User user1 = userDao.getById(user.getId());
+        user1.setEmail(user.getEmail());
+        user1.setLastName(user.getLastName());
+        user1.setFirstName(user.getFirstName());
+        user1.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        Set<Role> roleSet = roleIds.stream()
+                .map(roleDao::getById)
+                .collect(Collectors.toSet());
+        user1.setRoles(roleSet);
         userDao.update(user1);
     }
 

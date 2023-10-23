@@ -53,7 +53,13 @@ public class UserDaoImp implements UserDao {
                 .setParameter("email", email)
                 .getSingleResult();
     }
+    @Override
+    public boolean isExist(Long id) {
+       return entityManager.createQuery("SELECT u FROM User u WHERE u.id = :id", User.class)
+                .setParameter("id", id)
+                .getResultList().isEmpty();
 
+    }
 
 }
 

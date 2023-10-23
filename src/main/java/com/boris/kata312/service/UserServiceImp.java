@@ -51,9 +51,14 @@ public class UserServiceImp implements UserService {
 
     @Transactional
     @Override
-    public void delete(Long id) {
-
+    public boolean delete(Long id) {
         userDao.delete(id);
+
+    return userDao.isExist(id);}
+    @Transactional
+    @Override
+    public User getByEmail(String email) {
+        return userDao.findByEmail(email);
     }
 
     @Transactional

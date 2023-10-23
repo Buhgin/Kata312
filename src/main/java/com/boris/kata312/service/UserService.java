@@ -9,8 +9,9 @@ import java.util.List;
 public interface UserService extends UserDetailsService {
     void add(User user, List<Long> roleIds);
     List<User> listUsers();
-    void delete(Long id);
+    boolean delete(Long id);
     void update(long userId,User user, List<Long> roleIds);
     User getById(Long id);
+    User getByEmail(String email);
 
 }

@@ -1,24 +1,24 @@
 package com.boris.kata312.controller;
 
 import com.boris.kata312.model.User;
-import com.boris.kata312.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
-@RequestMapping("/user")
+@RequestMapping("api/user")
 public class UserController {
 
 
     @GetMapping()
-    public String show(@AuthenticationPrincipal User user, Model model) {
-        model.addAttribute("user", user);
-        return "user";
+    public ResponseEntity<User> show(@AuthenticationPrincipal User user) {
+        if (user == null) {
+            return ResponseEntity.notFound().build();   }
+
+        return ResponseEntity.ok(user);
     }
 }

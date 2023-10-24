@@ -13,5 +13,6 @@ public interface UserService extends UserDetailsService {
     void update(long userId,User user, List<Long> roleIds);
     User getById(Long id);
     User getByEmail(String email);
+    boolean isExistEmail(String email);
 
 }

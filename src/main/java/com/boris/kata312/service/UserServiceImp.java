@@ -61,6 +61,11 @@ public class UserServiceImp implements UserService {
         return userDao.findByEmail(email);
     }
 
+    @Override
+    public boolean isExistEmail(String email) {
+        return userDao.isExistEmail(email);
+    }
+
     @Transactional
     @Override
     public void update(long id, User user, List<Long> roleIds) {
@@ -77,12 +82,14 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
+    @Transactional
     public User getById(Long id) {
         return userDao.getById(id);
     }
 
 
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userDao.findByEmail(email);
         if (user == null) {

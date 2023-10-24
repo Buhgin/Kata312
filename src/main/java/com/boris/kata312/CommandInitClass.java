@@ -5,29 +5,25 @@ import com.boris.kata312.model.User;
 import com.boris.kata312.model.UserRole;
 import com.boris.kata312.service.RoleService;
 import com.boris.kata312.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Component
+@RequiredArgsConstructor
 public class CommandInitClass implements CommandLineRunner {
 
 
     private final UserService userService;
     private final RoleService roleService;
 
-    private final PasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public CommandInitClass(UserService userService, RoleService roleService, PasswordEncoder passwordEncoder) {
-        this.userService = userService;
-        this.roleService = roleService;
-        this.passwordEncoder = passwordEncoder;
-    }
+
 
     @Override
     public void run(String... args)  {
@@ -58,14 +54,16 @@ public class CommandInitClass implements CommandLineRunner {
         setUser.add(roleUser);
 
         User admin = new User("Rex","rex","rex@mail.ru",
-                passwordEncoder.encode("password"));
+                "password");
         admin.setRoles(setAdmin);
         User user = new User("Ivan", "Ivanov", "ivanov@mail.ru",
-                passwordEncoder.encode("password"));
+                "password");
         user.setRoles(setUser);
 
-        userService.add(admin, adminROLE);
-        userService.add(user, userROLE);
+        if (userService.isExistEmail(admin.getEmail()) && userService.isExistEmail(user.getEmail())) {
+            userService.add(admin, adminROLE);
+            userService.add(user, userROLE);
+        }
 
 
     }

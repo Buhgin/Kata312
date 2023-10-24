@@ -13,4 +13,5 @@ public interface UserDao {
     boolean isExist(Long id);
 
     User findByEmail(String email);
+    boolean isExistEmail(String email);
 }

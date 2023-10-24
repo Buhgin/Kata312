@@ -37,7 +37,7 @@ public class AdminController {
     //Update
     @PostMapping("/{id}")
     public String edit(Model model, @ModelAttribute("user") User user, @PathVariable("id") long id,
-                       @RequestParam List<Long> roleIds) {
+                       @RequestParam(required = false) List<Long> roleIds) {
         model.addAttribute("user", userService.getById(id));
         model.addAttribute("roleList", userService.listUsers());
 

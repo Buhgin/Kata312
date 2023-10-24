@@ -63,11 +63,21 @@ public class UserServiceImp implements UserService {
         user1.setEmail(user.getEmail());
         user1.setLastName(user.getLastName());
         user1.setFirstName(user.getFirstName());
-        user1.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        Set<Role> roleSet = roleIds.stream()
-                .map(roleDao::getById)
-                .collect(Collectors.toSet());
-        user1.setRoles(roleSet);
+        if(user.getPassword().isEmpty()){
+            user1.setPassword(userDao.getById(user.getId()).getPassword());}
+        else{
+            user1.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        }
+        if(roleIds==null){
+            user1.setRoles(userDao.getById(user.getId()).getRoles());
+            }
+        else{
+            Set<Role> roleSet = roleIds.stream()
+                    .map(roleDao::getById)
+                    .collect(Collectors.toSet());
+            user1.setRoles(roleSet);
+        }
+
         userDao.update(user1);
     }
 

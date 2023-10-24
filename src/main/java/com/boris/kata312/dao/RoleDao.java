@@ -11,5 +11,6 @@ public interface RoleDao {
 
     Role findByRoleName(String role);
     List<Role> listRole();
+    void addRole(Role role);
 
 }

@@ -60,7 +60,10 @@ public class CommandInitClass implements CommandLineRunner {
                 "password");
         user.setRoles(setUser);
 
+
         if (userService.isExistEmail(admin.getEmail()) && userService.isExistEmail(user.getEmail())) {
+            userService.delete(userService.getByEmail(admin.getEmail()).getId());
+            userService.delete(userService.getByEmail(user.getEmail()).getId());
             userService.add(admin, adminROLE);
             userService.add(user, userROLE);
         }

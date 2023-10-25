@@ -1,7 +1,6 @@
 package com.boris.kata312.dao;
 
 import com.boris.kata312.model.Role;
-import com.boris.kata312.model.UserRole;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -12,6 +11,7 @@ import java.util.List;
 public class RoleDaoImpl implements RoleDao {
     @PersistenceContext
     private EntityManager entityManager;
+
     @Override
     public Role getById(Long id) {
         return entityManager.find(Role.class, id);

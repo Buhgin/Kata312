@@ -23,7 +23,7 @@ public class UserDaoImp implements UserDao {
     @Override
     @SuppressWarnings("unchecked")
     public List<User> listUsers() {
-        return entityManager.createQuery("SELECT u FROM User u",User.class).getResultList();
+        return entityManager.createQuery("SELECT u FROM User u", User.class).getResultList();
     }
 
     @Override
@@ -40,8 +40,8 @@ public class UserDaoImp implements UserDao {
         entityManager.merge(user);
 
 
-
     }
+
     @Override
     public User getById(Long id) {
         return entityManager.find(User.class, id);
@@ -63,7 +63,7 @@ public class UserDaoImp implements UserDao {
 
     @Override
     public boolean isExist(Long id) {
-       return entityManager.createQuery("SELECT u FROM User u WHERE u.id = :id", User.class)
+        return entityManager.createQuery("SELECT u FROM User u WHERE u.id = :id", User.class)
                 .setParameter("id", id)
                 .getResultList().isEmpty();
 

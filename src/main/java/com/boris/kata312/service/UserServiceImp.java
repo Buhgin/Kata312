@@ -6,6 +6,7 @@ import com.boris.kata312.dao.UserDao;
 import com.boris.kata312.model.Role;
 import com.boris.kata312.model.User;
 import com.boris.kata312.model.UserRole;
+import com.boris.kata312.payload.UserUpdate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -68,16 +69,22 @@ public class UserServiceImp implements UserService {
 
     @Transactional
     @Override
-    public void update(long id, User user, List<Long> roleIds) {
-        User user1 = userDao.getById(user.getId());
-        user1.setEmail(user.getEmail());
-        user1.setLastName(user.getLastName());
-        user1.setFirstName(user.getFirstName());
-        user1.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        Set<Role> roleSet = roleIds.stream()
-                .map(roleDao::getById)
-                .collect(Collectors.toSet());
-        user1.setRoles(roleSet);
+    public void update(long id, UserUpdate user, List<Long> roleIds) {
+        User user1 = userDao.getById(id);
+        user1.setEmail(user.email());
+        user1.setFirstName(user.firstName());
+        user1.setLastName(user.lastName());
+        if(!user.password().isEmpty()){
+            user1.setPassword(bCryptPasswordEncoder.encode(user.password()));
+        }
+
+        if(!roleIds.isEmpty()){
+            Set<Role> roleSet = roleIds.stream()
+                    .map(roleDao::getById)
+                    .collect(Collectors.toSet());
+            user1.setRoles(roleSet);
+        }
+
         userDao.update(user1);
     }
 

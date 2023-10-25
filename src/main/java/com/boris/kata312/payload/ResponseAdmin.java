@@ -8,15 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class ResponseAdmin {
-    private List<User> users;
-    private List<Role> roles;
-    private User userActive;
-    private User userNew;
-    private List<Role> roleList;
+
+public record ResponseAdmin(List<User> users, List<Role> roles, User userActive) {
+
 
 }

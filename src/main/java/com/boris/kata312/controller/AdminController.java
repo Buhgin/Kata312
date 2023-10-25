@@ -23,14 +23,14 @@ public class AdminController {
     private final RoleService roleService;
 
     @PostMapping()
-    public void createUser(@RequestParam("firstName") String firstName,
-                           @RequestParam("lastName") String lastName,
-                           @RequestParam("email") String email,
-                           @RequestParam("password") String password,
-                           @RequestParam("roleIds") List<Long> roleIds) {
+    public ResponseEntity<Void> createUser(@RequestParam("firstName") String firstName,
+                                           @RequestParam("lastName") String lastName,
+                                           @RequestParam("email") String email,
+                                           @RequestParam("password") String password,
+                                           @RequestParam("roleIds") List<Long> roleIds) {
 
         userService.add(new User(firstName, lastName, email, password), roleIds);
-
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/roles")
@@ -40,12 +40,10 @@ public class AdminController {
 
 
     @PutMapping("/{id}")
-    public void edit(@PathVariable("id") long id,
-                     @RequestBody UserUpdate user
-    ) {
-
-
+    public ResponseEntity<Void> edit(@PathVariable("id") long id,
+                                     @RequestBody UserUpdate user) {
         userService.update(id, user, user.roleIds());
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}")
